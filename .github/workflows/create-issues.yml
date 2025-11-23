@@ -5,18 +5,20 @@ on:
       - ".github/issues_draft/**"
 
 jobs:
-  create:
+  create-issues:
     runs-on: ubuntu-latest
     permissions:
       issues: write
+      contents: read
     steps:
       - uses: actions/checkout@v4
-      - name: Create issues from folder
-        uses: mendelt/pair-action@v1
+
+      - name: Create one issue per .md file
+        uses: gr2m/create-or-update-issue-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          directory: .github/issues_draft
-          glob: "*.md"
-          template: |
-            title: {{ title }}
-            body: {{ content }}
+          dirname: .github/issues_draft
+          title: "{{frontmatter.title}}"
+          body: "{{content}}"
+          update_existing: "true"
