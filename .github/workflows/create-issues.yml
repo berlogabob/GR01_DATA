@@ -11,8 +11,12 @@ jobs:
       issues: write
     steps:
       - uses: actions/checkout@v4
-      - name: Create or update issues
-        uses: peter-evans/create-issue-from-file@v5
+      - name: Create issues from folder
+        uses: mendelt/pair-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          issue-folder: .github/issues_draft
+          directory: .github/issues_draft
+          glob: "*.md"
+          template: |
+            title: {{ title }}
+            body: {{ content }}
